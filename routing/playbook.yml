@@ -1,0 +1,14 @@
+---
+- hosts: switch
+  become: yes
+  tasks:
+    - name: copy interfaces
+      copy: src=ospf-numbered/{{ ansible_hostname }}/interfaces dest=/etc/network/
+    - name: copy frr daemons
+      copy: src=ospf-numbered/{{ ansible_hostname }}/daemons dest=/etc/frr/
+    - name: copy frr conf
+      copy: src=ospf-numbered/{{ ansible_hostname }}/frr.conf dest=/etc/frr/
+    - name: reload networking
+      command: ifreload -a
+    - name: reload frr
+      service: name=frr state=restarted
